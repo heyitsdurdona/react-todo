@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card"
 import { Button, buttonVariants } from "./ui/button"
 import { Badge } from "./ui/badge"
-import { CheckCircle, Trash, X } from "lucide-react"
+import { CheckCircle, RefreshCcw, Trash, X } from "lucide-react"
 
 import {
     Tooltip,
@@ -15,15 +15,33 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { deleteTodo } from "../request"
+import { useState } from "react"
+import { toast } from "sonner"
 
 
 
 
-export default function Todo({ priority = "secondary", title = "This is the task title", completed = false }) {
+export default function Todo({ priority = "secondary", title = "This is the task title", completed = false, id=1, dispatch }) {
+    const [delLoading, setDelLoading] = useState(false);
     const styles = {
         hight: "destructive",
         medium: "outline",
         low: "secondary",
+    }
+
+    function handleDelete(id){
+        setDelLoading(true);
+        deleteTodo(id)
+        .then((id)=>{
+            dispatch({type: "delete", payload: id})
+            toast.success("Muvaffaqiyatli o'chirildi")
+        })
+        .catch(()=>{})
+        .finally(()=>{
+            setDelLoading(false);
+        })
+
     }
     return (
         <Card>
@@ -41,8 +59,8 @@ export default function Todo({ priority = "secondary", title = "This is the task
             <CardFooter>
                 <TooltipProvider>
                     <Tooltip>
-                        <TooltipTrigger className={buttonVariants({ variant: "destructive" })}>
-                            <Trash />
+                        <TooltipTrigger disabled={delLoading} onClick={() => handleDelete(id)} className={buttonVariants({ variant: "destructive" })}>
+                            {delLoading ? <RefreshCcw className="animate-spin" /> : <Trash />}
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>O'chirmoqchimisiz?</p>

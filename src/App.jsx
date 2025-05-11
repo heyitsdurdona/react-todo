@@ -2,17 +2,19 @@ import { useEffect, useReducer } from 'react'
 import Header from './components/Header'
 import Todos from './components/Todos'
 import { getTodos } from './request';
-import Loading from './components/Loading';
+import { toast, Toaster } from 'sonner';
 
 function reducerFunction(state, action){
   const {type, payload} = action;
   switch(type){
     case "GET_TODOS":
-      return {...state, todos: payload};
+      return {...state, todos: payload, loading: false};
     case "loading":
       return {...state, loading: !state.loading};
     case "error":
       return {...state, error: payload};
+    case "delete":
+      return {...state, todos: state.todos.filter((todo) => todo.id !== payload)};
     default:
       return state
   }
@@ -42,6 +44,7 @@ export default function App() {
     <div>
       <Header />
       <Todos state={state} dispatch={dispatch}/>
+      <Toaster />
     </div>
   )
 }
