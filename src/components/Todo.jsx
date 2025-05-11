@@ -37,7 +37,9 @@ export default function Todo({ priority = "secondary", title = "This is the task
             dispatch({type: "delete", payload: id})
             toast.success("Muvaffaqiyatli o'chirildi")
         })
-        .catch(()=>{})
+        .catch(()=>{
+            toast.error("O'chirishda xatolik yuz berdi");
+        })
         .finally(()=>{
             setDelLoading(false);
         })

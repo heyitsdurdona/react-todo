@@ -9,18 +9,18 @@ export async function getTodos(query = ""){
     }
 }
 
-export async function AddTodo(todo){
+export async function AddTodo(todo) {
     const req = await fetch(baseURL + "/todos", {
         method: "POST",
         body: JSON.stringify(todo),
-        header:{
-            "Content-Type": "application/json"
-        }
-    });    
-    if(req.ok){
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    if (req.ok) {
         const res = await req.json();
         return res;
-    }else {
+    } else {
         throw new Error("Failed to add data");
     }
 }

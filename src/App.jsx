@@ -11,6 +11,8 @@ function reducerFunction(state, action){
       return {...state, todos: payload, loading: false};
     case "loading":
       return {...state, loading: !state.loading};
+    case "add":
+      return {...state, todos: [payload, ...state.todos]};
     case "error":
       return {...state, error: payload};
     case "delete":
@@ -42,7 +44,7 @@ export default function App() {
   }, []);
   return (
     <div>
-      <Header />
+      <Header dispatch={dispatch} />
       <Todos state={state} dispatch={dispatch}/>
       <Toaster />
     </div>
