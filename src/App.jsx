@@ -17,6 +17,8 @@ function reducerFunction(state, action){
       return {...state, error: payload};
     case "delete":
       return {...state, todos: state.todos.filter((todo) => todo.id !== payload)};
+    case "filter":
+      return {...state, filter: payload};
     default:
       return state
   }
@@ -27,13 +29,14 @@ const initialState = {
   todos: [],
   error: null, 
   loading: false,
+  filter: "",
 }
 
 export default function App() {
   const [state, dispatch] = useReducer(reducerFunction, initialState);
   useEffect(() => {
     dispatch({type: "loading"})
-    getTodos()
+    getTodos(state.filter ? `?priority=${state.filter}` : "")
     .then((res) => {
       dispatch({type: "GET_TODOS", payload: res})
      })
@@ -41,7 +44,7 @@ export default function App() {
       dispatch({type: "error", payload: message})
     })
     .finally(() => { });
-  }, []);
+  }, [state.filter]);
   return (
     <div>
       <Header dispatch={dispatch} />
